@@ -62,9 +62,8 @@ create_script_header() {
 		;;
 	esac
 	echo "$shebang" >"$script_name.$file_extension"
-	echo "" >>"$script_name.$file_extension"
-	figlet -f slant "$script_name" | sed 's/^/# /' >>"$script_name.$file_extension"
-	echo "By  .$author_name" | figlet -f script | sed 's/^/# /' >>"$script_name.$file_extension"
+	figlet -f small "$script_name" | sed 's/^/# /' >>"$script_name.$file_extension"
+	echo "By  .$author_name" | figlet -f small | sed 's/^/# /' >>"$script_name.$file_extension"
 	echo "$current_date" >>"$script_name.$file_extension"
 	echo "# Description: $description" >>"$script_name.$file_extension"
 	chmod +x "$script_name.$file_extension"
