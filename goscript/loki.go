@@ -18,28 +18,58 @@ var supportedFonts = map[string]bool{
 	"bubbles":   true,
 	"jerusalim": true,
 }
+
+// validateFont checks if the entered font is supported
+func validateFont(font string) bool {
+	if !supportedFonts[strings.ToLower(font)] {
+		fmt.Println("Unsupported font. Please choose from: small, script, mini, bubbles, jerusalim")
+		return false
+	}
+	return true
+}
+
+// validateScriptLanguage checks if the entered language is valid
+func validateScriptLanguage(scriptLang string) bool {
+	switch strings.ToLower(strings.TrimSpace(scriptLang)) {
+	case "bash", "python", "perl", "ruby", "php", "javascript", "c", "cpp", "java", "go":
+		return true
+	default:
+		fmt.Println("Unsupported language. Please choose from: bash, python, perl, ruby, php, javascript, c, cpp, java, go")
+		return false
+	}
+}
+
 // createScriptHeader creates a custom script header based on user input
 func createScriptHeader() {
-	fmt.Println("Creating Custom Script Header...")
 	var scriptName, authorName, description, scriptLang, font string
+
+	fmt.Println("Creating Custom Script Header...")
 
 	fmt.Print("Enter your script name: ")
 	fmt.Scanln(&scriptName)
+
 	fmt.Print("Enter your name or alias: ")
 	fmt.Scanln(&authorName)
+
 	fmt.Print("Enter script description: ")
 	fmt.Scanln(&description)
-	fmt.Print("Enter script language (bash, python, perl, ruby, php, javascript, c, cpp, java, go): ")
-	fmt.Scanln(&scriptLang)
-	fmt.Print("Enter font for ASCII art (small, script, mini, bubbles, jerusalim): ")
-	fmt.Scanln(&font)
 
-  
-	// Check if the entered font is supported
-	if !supportedFonts[strings.ToLower(font)] {
-		fmt.Println("Unsupported font. Please choose from: small, script, mini, bubbles, jerusalim")
-		return
+	for {
+		fmt.Print("Enter script language (bash, python, perl, ruby, php, javascript, c, cpp, java, go): ")
+		fmt.Scanln(&scriptLang)
+		if validateScriptLanguage(scriptLang) {
+			break
+		}
 	}
+
+	for {
+		fmt.Print("Enter font for ASCII art (small, script, mini, bubbles, jerusalim): ")
+		fmt.Scanln(&font)
+		if validateFont(font) {
+			break
+		}
+	}
+
 	var fileExtension, shebang string
 
 	switch strings.ToLower(strings.TrimSpace(scriptLang)) {
@@ -69,9 +99,6 @@ func createScriptHeader() {
 		fileExtension = "java"
 	case "go":
 		fileExtension = "go"
-	default:
-		fmt.Println("Unsupported language. Exiting...")
-		return
 	}
 
 	fileName := fmt.Sprintf("%s.%s", scriptName, fileExtension)
