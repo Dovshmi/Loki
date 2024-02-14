@@ -73,9 +73,13 @@ create_script_header() {
 # Main function
 main() {
 	#	echo "$@"
-	ARGS=$(getopt --options aodlt --long "author,output,description,language,tui" -- "$@")
+	ARGS=$(getopt --options a:o:d:l:t --long "author:,output:,description:,language:,tui" -- "$@")
 	eval set --"$ARGS"
-
+	Check=$(echo $ARGS | awk '{print $NF}')
+	if [[ ! "$Check" == "--" ]]; then
+		echo "Invalid command. Exiting..."
+		exit 1
+	fi
 	author="false"
 	output="false"
 	description="false"
@@ -84,23 +88,24 @@ main() {
 	while true; do
 		case "$1" in
 		-a | --author)
-			author="true"
-			shift
+			author=$2
+			shift 2
 			;;
 		-o | --output)
-			output="true"
-			shift
+			output=$2
+			shift 2
 			;;
 		-d | --description)
-			description="true"
-			shift
+			description=$2
+			shift 2
 			;;
 		-l | --language)
-			language="true"
-			shift
+			language=$2
+			shift 2
 			;;
 		-t | --tui)
 			tui="true"
+			create_script_header
 			break
 			;;
 		--)
@@ -112,7 +117,7 @@ main() {
 			;;
 		esac
 	done
-	echo "author: $author, description: $description, language: $language"
+	echo "tui: $tui, author: $author, description: $description, language: $language, output: $output"
 	#create_script_header
 }
 
