@@ -39,15 +39,15 @@ handle_language() {
 		;;
 	cpp | c++)
 		echo "cpp"
-		echo "" # No shebang for C++
+		echo "#" # No shebang for C++
 		;;
 	java)
 		echo "java"
-		echo "" # No shebang for Java
+		echo "#" # No shebang for Java
 		;;
 	golang | go)
 		echo "go"
-		echo "" # No shebang for Go
+		echo "#" # No shebang for Go
 		;;
 	*)
 		echo "false"
@@ -104,10 +104,24 @@ create_script_header() {
 	fig_font=${fig_font:-small} # Set default font to small if empty
 	fig_use "$script_name" "$author_name" "$description" "$script_lang" "$fig_font" "$time_line"
 }
+# Function to display usage information
+display_usage() {
+	echo "Usage: $0 [OPTIONS]"
+	echo "Options:"
+	echo "  -a, --author      Specify the author name."
+	echo "  -o, --output      Specify the output file name."
+	echo "  -d, --description Specify the script description."
+	echo "  -l, --language    Specify the script language."
+	echo "  -f, --font        Specify the Figlet font."
+	echo "  -t, --time        Add the current date to the header."
+	echo "  -T, --tui         Use TUI (Text-based User Interface) to interactively provide script details."
+	echo "  -h, --help        Display this help message."
+	exit 0
+}
 
 # Main function
 main() {
-	ARGS=$(getopt --options a:o:d:l:f:tT -a -l "author:,output:,description:,language:,font:,time,tui" -- "$@")
+	ARGS=$(getopt --options a:o:d:l:f:htT -a -l "author:,output:,description:,language:,font:,time,help,tui" -- "$@")
 	eval set --"$ARGS"
 	echo $ARGS
 	Check=$(echo $ARGS | awk '{print $NF}')
@@ -123,6 +137,7 @@ main() {
 	font="false"
 	tui="false"
 	timeline="false"
+	handle_help="false"
 	while true; do
 		case "$1" in
 		-a | --author)
@@ -135,7 +150,6 @@ main() {
 			checkoutput=$(echo "$dot" | awk '{print $2}')
 			if [[ -n "$checkoutput" ]]; then
 				language=$(handle_language "$checkoutput" | head -n 1)
-				echo "$language Loaded"
 				output=$(echo "$dot" | awk '{print $1}')
 			fi
 			shift 2
@@ -161,6 +175,11 @@ main() {
 			timeline="true"
 			shift
 			;;
+		-h | --help)
+			handle_help="true"
+			display_usage
+			exit 1
+			;;
 		-T | --tui)
 			tui="true"
 			create_script_header
@@ -171,21 +190,26 @@ main() {
 			;;
 		*)
 			echo "Invalid option: $1"
+			display_usage
 			exit 1
 			;;
 		esac
 	done
 	echo "tui: $tui, author: $author, description: $description, language: $language, output: $output, font: $font"
+
 	if [[ "$author" == "false" && "$tui" == "false" ]]; then
 		echo "No author name specified. Exiting..."
+		display_usage
 		exit 1
 	fi
 	if [[ "$output" == "false" && "$tui" == "false" ]]; then
 		echo "No output file specified. Exiting..."
+		display_usage
 		exit 1
 	fi
 	if [[ ! "$output" == "false" && "$language" == "false" ]]; then
 		echo "No language specified. Exiting..."
+		display_usage
 	fi
 
 	if [[ "$description" == "false" ]]; then
