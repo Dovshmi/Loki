@@ -62,16 +62,18 @@ fig_use() {
 	description="$3"
 	script_lang=$4
 	fig_font="$5"
-	echo "$script_name $author_name $description $script_lang $fig_font"
-	current_date=$(date +%c | awk '{printf "%s %s %s %s",$1,$2,$3,$4}' | figlet -f "$fig_font" | sed 's/^/# /')
-
+	time_line="$6"
+	echo "$script_name $author_name $description $script_lang $fig_font $time_line"
 	file_extension=$(handle_language "$script_lang" | head -n 1)
 	shebang=$(handle_language "$script_lang" | tail -n 1)
 
 	echo "$shebang" >"$script_name.$file_extension"
 	figlet -f "$fig_font" "$script_name" | sed 's/^/# /' >>"$script_name.$file_extension"
 	echo "By  .$author_name" | figlet -f "$fig_font" | sed 's/^/# /' >>"$script_name.$file_extension"
-	echo "$current_date" >>"$script_name.$file_extension"
+	if [[ "$time_line" == "true" ]]; then
+		current_date=$(date +%c | awk '{printf "%s %s %s %s",$1,$2,$3,$4}' | figlet -f "$fig_font" | sed 's/^/# /')
+		echo "$current_date" >>"$script_name.$file_extension"
+	fi
 	echo "# Description: $description" >>"$script_name.$file_extension"
 	chmod +x "$script_name.$file_extension"
 	echo "Custom script header created successfully in $script_name.$file_extension!"
@@ -87,13 +89,25 @@ create_script_header() {
 	read -p "Enter script description: " description
 	read -p "Enter script language (bash, python, perl, ruby, php, javascript, c, cpp, java, go): " script_lang
 	read -p "Enter Figlet font (optional, press Enter for default 'small'): " fig_font
+	read -p "Enter add date (y/n) (optional, press Enter for default 'y'): " time_line
+	case "$time_line" in
+	y | Y | yes | Yes | YES)
+		time_line="true"
+		;;
+	n | N | no | No | NO)
+		time_line="false"
+		;;
+	*)
+		time_line="true"
+		;;
+	esac
 	fig_font=${fig_font:-small} # Set default font to small if empty
-	fig_use "$script_name" "$author_name" "$description" "$script_lang" "$fig_font"
+	fig_use "$script_name" "$author_name" "$description" "$script_lang" "$fig_font" "$time_line"
 }
 
 # Main function
 main() {
-	ARGS=$(getopt --options a:o:d:l:f:t -a -l "author:,output:,description:,language:,font:,tui" -- "$@")
+	ARGS=$(getopt --options a:o:d:l:f:tT -a -l "author:,output:,description:,language:,font:,time,tui" -- "$@")
 	eval set --"$ARGS"
 	echo $ARGS
 	Check=$(echo $ARGS | awk '{print $NF}')
@@ -108,7 +122,7 @@ main() {
 	language="false"
 	font="false"
 	tui="false"
-
+	timeline="false"
 	while true; do
 		case "$1" in
 		-a | --author)
@@ -143,7 +157,11 @@ main() {
 			font=$2
 			shift 2
 			;;
-		-t | --tui)
+		-t | --time)
+			timeline="true"
+			shift
+			;;
+		-T | --tui)
 			tui="true"
 			create_script_header
 			exit 1
@@ -176,7 +194,7 @@ main() {
 	if [[ "$font" == "false" ]]; then
 		font="small"
 	fi
-	fig_use "$output" "$author" "$description" "$language" "$font"
+	fig_use "$output" "$author" "$description" "$language" "$font" "$timeline"
 
 }
 
