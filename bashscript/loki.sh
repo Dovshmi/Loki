@@ -50,7 +50,7 @@ handle_language() {
 		echo "" # No shebang for Go
 		;;
 	*)
-		echo "Unsupported language. Exiting..."
+		echo "false"
 		exit 1
 		;;
 	esac
@@ -150,6 +150,23 @@ main() {
 		esac
 	done
 	echo "tui: $tui, author: $author, description: $description, language: $language, output: $output"
+	if [[ "$author" == "false" && "$tui" == "false" ]]; then
+		echo "No author name specified. Exiting..."
+		exit 1
+	fi
+	if [[ "$output" == "false" && "$tui" == "false" ]]; then
+		echo "No output file specified. Exiting..."
+		exit 1
+	fi
+	if [[ ! "$output" == "false" && "$language" == "false" ]]; then
+		echo "No language specified. Exiting..."
+	fi
+
+	if [[ "$description" == "false" ]]; then
+		description="you could write a small poem"
+	fi
+	fig_use $output "$author" "$description" $language
+
 }
 
 # Execute main function
