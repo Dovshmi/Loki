@@ -56,15 +56,12 @@ handle_language() {
 	esac
 }
 
-# Function to create custom script header
-create_script_header() {
-	clear
-	echo "Creating Custom Script Header..."
-	read -p "Enter your script name: " script_name
-	read -p "Enter your name or alias: " author_name
-	read -p "Enter script description: " description
-	read -p "Enter script language (bash, python, perl, ruby, php, javascript, c, cpp, java, go): " script_lang
-
+fig_use() {
+	script_name=$1
+	author_name="$2"
+	description="$3"
+	script_lang=$4
+	echo "$script_name $author_name $description $script_lang"
 	current_date=$(date +%c | awk '{printf "%s %s %s %s",$1,$2,$3,$4}' | figlet -f small | sed 's/^/# /')
 
 	file_extension=$(handle_language "$script_lang" | head -n 1)
@@ -77,6 +74,18 @@ create_script_header() {
 	echo "# Description: $description" >>"$script_name.$file_extension"
 	chmod +x "$script_name.$file_extension"
 	echo "Custom script header created successfully in $script_name.$file_extension!"
+
+}
+
+# Function to create custom script header
+create_script_header() {
+	clear
+	echo "Creating Custom Script Header..."
+	read -p "Enter your script name: " script_name
+	read -p "Enter your name or alias: " author_name
+	read -p "Enter script description: " description
+	read -p "Enter script language (bash, python, perl, ruby, php, javascript, c, cpp, java, go): " script_lang
+	fig_use $script_name "$author_name" "$description" $script_lang
 }
 
 # Main function
@@ -129,7 +138,7 @@ main() {
 		-t | --tui)
 			tui="true"
 			create_script_header
-			exit 3
+			exit 1
 			;;
 		--)
 			break
