@@ -94,6 +94,13 @@ main() {
 			;;
 		-o | --output)
 			output=$2
+			dot=$(echo "$output" | tr -s "." " ")
+			checkoutput=$(echo "$dot" | awk '{print $2}')
+			if [[ -n "$checkoutput" ]]; then
+				language="$checkoutput"
+				echo "$language Loaded"
+				output=$(echo "$dot" | awk '{print $1}')
+			fi
 			shift 2
 			;;
 		-d | --description)
@@ -101,7 +108,12 @@ main() {
 			shift 2
 			;;
 		-l | --language)
-			language=$2
+			if [[ "$language" == "false" ]]; then
+				language=$2
+			else
+				echo "$language Already set by the file name"
+				exit 2
+			fi
 			shift 2
 			;;
 		-t | --tui)
