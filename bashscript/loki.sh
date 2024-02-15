@@ -73,8 +73,9 @@ create_script_header() {
 # Main function
 main() {
 	#	echo "$@"
-	ARGS=$(getopt --options a:o:d:l:t --long "author:,output:,description:,language:,tui" -- "$@")
+	ARGS=$(getopt --options a:o:d:l:t -a -l "author:,output:,description:,language:,tui" -- "$@")
 	eval set --"$ARGS"
+	echo "$ARGS"
 	Check=$(echo $ARGS | awk '{print $NF}')
 	if [[ ! "$Check" == "--" ]]; then
 		echo "Invalid command. Exiting..."
