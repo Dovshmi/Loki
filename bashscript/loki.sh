@@ -61,15 +61,16 @@ fig_use() {
 	author_name="$2"
 	description="$3"
 	script_lang=$4
-	echo "$script_name $author_name $description $script_lang"
-	current_date=$(date +%c | awk '{printf "%s %s %s %s",$1,$2,$3,$4}' | figlet -f small | sed 's/^/# /')
+	fig_font="$5"
+	echo "$script_name $author_name $description $script_lang $fig_font"
+	current_date=$(date +%c | awk '{printf "%s %s %s %s",$1,$2,$3,$4}' | figlet -f "$fig_font" | sed 's/^/# /')
 
 	file_extension=$(handle_language "$script_lang" | head -n 1)
 	shebang=$(handle_language "$script_lang" | tail -n 1)
 
 	echo "$shebang" >"$script_name.$file_extension"
-	figlet -f small "$script_name" | sed 's/^/# /' >>"$script_name.$file_extension"
-	echo "By  .$author_name" | figlet -f small | sed 's/^/# /' >>"$script_name.$file_extension"
+	figlet -f "$fig_font" "$script_name" | sed 's/^/# /' >>"$script_name.$file_extension"
+	echo "By  .$author_name" | figlet -f "$fig_font" | sed 's/^/# /' >>"$script_name.$file_extension"
 	echo "$current_date" >>"$script_name.$file_extension"
 	echo "# Description: $description" >>"$script_name.$file_extension"
 	chmod +x "$script_name.$file_extension"
@@ -85,12 +86,14 @@ create_script_header() {
 	read -p "Enter your name or alias: " author_name
 	read -p "Enter script description: " description
 	read -p "Enter script language (bash, python, perl, ruby, php, javascript, c, cpp, java, go): " script_lang
-	fig_use $script_name "$author_name" "$description" $script_lang
+	read -p "Enter Figlet font (optional, press Enter for default 'small'): " fig_font
+	fig_font=${fig_font:-small} # Set default font to small if empty
+	fig_use "$script_name" "$author_name" "$description" "$script_lang" "$fig_font"
 }
 
 # Main function
 main() {
-	ARGS=$(getopt --options a:o:d:l:t -a -l "author:,output:,description:,language:,tui" -- "$@")
+	ARGS=$(getopt --options a:o:d:l:f:t -a -l "author:,output:,description:,language:,font:,tui" -- "$@")
 	eval set --"$ARGS"
 	echo $ARGS
 	Check=$(echo $ARGS | awk '{print $NF}')
@@ -103,6 +106,7 @@ main() {
 	output="false"
 	description="false"
 	language="false"
+	font="false"
 	tui="false"
 
 	while true; do
@@ -135,6 +139,10 @@ main() {
 			fi
 			shift 2
 			;;
+		-f | --font)
+			font=$2
+			shift 2
+			;;
 		-t | --tui)
 			tui="true"
 			create_script_header
@@ -149,7 +157,7 @@ main() {
 			;;
 		esac
 	done
-	echo "tui: $tui, author: $author, description: $description, language: $language, output: $output"
+	echo "tui: $tui, author: $author, description: $description, language: $language, output: $output, font: $font"
 	if [[ "$author" == "false" && "$tui" == "false" ]]; then
 		echo "No author name specified. Exiting..."
 		exit 1
@@ -165,7 +173,10 @@ main() {
 	if [[ "$description" == "false" ]]; then
 		description="you could write a small poem"
 	fi
-	fig_use $output "$author" "$description" $language
+	if [[ "$font" == "false" ]]; then
+		font="small"
+	fi
+	fig_use "$output" "$author" "$description" "$language" "$font"
 
 }
 
