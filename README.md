@@ -71,6 +71,12 @@ You can also use command-line arguments to provide the necessary details for gen
 - **Educational Materials**: Create visually appealing script headers for tutorials, guides, or educational materials.
 - **Script Libraries**: Incorporate custom headers into script libraries to provide a consistent look and feel.
 
+## Shurtcut
+
+If you would like to create a small little shurtcut, you could make symbolic links. 
+```bash
+sudo ln -s "/FULL/PATH/TO/Loki/bashscript/loki.sh" "/usr/bin/loki"
+```
 
 ## License
 
