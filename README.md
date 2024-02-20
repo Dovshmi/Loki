@@ -13,7 +13,7 @@ sudo apt-get install figlet
 sudo dnf install figlet
 ```
 ```bash
-sudo  pacman -S figlet
+sudo pacman -S figlet
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ By Using Interactive Mode, You can provide the necessary details for generating 
 Like old scripts, you can use the interactive mode to add details to the script header.
 
 ```bash
-./loki.sh -t
+./loki.sh -T
 ```
 Or you could use the -- TUI mode:
 ```bash
@@ -37,29 +37,26 @@ You can also use command-line arguments to provide the necessary details for gen
 - `-d, --description`: Provide a description for the script.
 - `-l, --language`: Specify the script language (e.g., bash, python).
 - `-f, --font`: Optionally specify the Figlet font to use.
-- `-t, --tui`: Enable textual user interface mode.
+- `-t, --time`: Optionally specify the time of day to use in the header.
+- `-T, --tui`: Enable textual user interface mode.
+- `-h, --help`: Display help information.
 
-Example:
-
-```bash
-./loki.sh -a "John Doe" -o "test.sh" -d "A simple script" -l bash
-```
 
 ### Examples
 
-#### Example 1: Creating a Bash Script Header
+#### Example 1: Creating a Bash Script Header Using .sh Extension 
 ```bash
-./loki.sh -a "Jane Smith" -o "my_script.sh" -d "A utility script for file manipulation" -l bash
+./loki.sh -a "Jane Smith" -o "my_script.sh" -d "A utility script for file manipulation"
 ```
 
-#### Example 2: Generating a Python Script Header
+#### Example 2: Generating a Python Script Header Using -l Flag 
 ```bash
-./loki.sh -a "John Doe" -o "python_script.py" -d "A script to analyze data" -l python
+./loki.sh -a "John Doe" -o "my_script" -d "A script to analyze data" -l python
 ```
 
-#### Example 3: Customizing Font and Using TUI Mode
+#### Example 3: Generating a Go Script Header Using -f Flag For figlet Font With -t Flag For Date
 ```bash
-./loki.sh -t
+./loki.sh -a "John Doe" -o "my_script.go" -d "simple script" -f "mini" -t
 ```
 
 ## Use Cases
