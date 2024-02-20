@@ -63,7 +63,7 @@ fig_use() {
 	script_lang=$4
 	fig_font="$5"
 	time_line="$6"
-	echo "$script_name $author_name $description $script_lang $fig_font $time_line"
+	#echo "$script_name $author_name $description $script_lang $fig_font $time_line"
 	file_extension=$(handle_language "$script_lang" | head -n 1)
 	shebang=$(handle_language "$script_lang" | tail -n 1)
 
