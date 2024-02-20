@@ -123,7 +123,7 @@ display_usage() {
 main() {
 	ARGS=$(getopt --options a:o:d:l:f:htT -a -l "author:,output:,description:,language:,font:,time,help,tui" -- "$@")
 	eval set --"$ARGS"
-	echo $ARGS
+	#echo $ARGS
 	Check=$(echo $ARGS | awk '{print $NF}')
 	if [[ ! "$Check" == "--" ]]; then
 		echo "Invalid command. Exiting..."
@@ -195,7 +195,7 @@ main() {
 			;;
 		esac
 	done
-	echo "tui: $tui, author: $author, description: $description, language: $language, output: $output, font: $font"
+	#echo "tui: $tui, author: $author, description: $description, language: $language, output: $output, font: $font"
 
 	if [[ "$author" == "false" && "$tui" == "false" ]]; then
 		echo "No author name specified. Exiting..."
