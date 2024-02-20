@@ -29,6 +29,8 @@ Or you could use the -- TUI mode:
 ```bash
 ./loki.sh --tui
 ```
+![2024-02-20_11-08-15](https://github.com/Dovshmi/Loki/assets/70490582/df76da56-6a0b-4a15-aa9d-616882fd23d2)
+
 ### Command-line Arguments
 You can also use command-line arguments to provide the necessary details for generating the script header. Available options are:
 
@@ -41,6 +43,7 @@ You can also use command-line arguments to provide the necessary details for gen
 - `-T, --tui`: Enable textual user interface mode.
 - `-h, --help`: Display help information.
 
+![2024-02-20_11-04-54](https://github.com/Dovshmi/Loki/assets/70490582/5abd2d54-0800-4518-b9c5-25cb5c5ae60b)
 
 ### Examples
 
@@ -48,11 +51,13 @@ You can also use command-line arguments to provide the necessary details for gen
 ```bash
 ./loki.sh -a "Jane Smith" -o "my_script.sh" -d "A utility script for file manipulation"
 ```
+![2024-02-20_11-06-22](https://github.com/Dovshmi/Loki/assets/70490582/32a511cc-b466-461e-abe8-b705d998b5e3)
 
 #### Example 2: Generating a Python Script Header Using -l Flag 
 ```bash
 ./loki.sh -a "John Doe" -o "my_script" -d "A script to analyze data" -l python
 ```
+![2024-02-20_11-07-16](https://github.com/Dovshmi/Loki/assets/70490582/d49359dc-cda7-4f82-be9e-994d4aeeea0d)
 
 #### Example 3: Generating a Go Script Header Using -f Flag For figlet Font With -t Flag For Date
 ```bash
@@ -66,10 +71,11 @@ You can also use command-line arguments to provide the necessary details for gen
 - **Educational Materials**: Create visually appealing script headers for tutorials, guides, or educational materials.
 - **Script Libraries**: Incorporate custom headers into script libraries to provide a consistent look and feel.
 
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
+Made By Dovshmi
 ## Acknowledgements
 
 - This script was inspired by the need for easily creating custom script headers.
