@@ -95,10 +95,19 @@ func filgetwithcap(ascii []string, lang string) {
 	// fmt.Println(handleLanguage(l))
 }
 
+func extolan(ex string) string {
+	for key, val := range languageMap {
+		if val.extension == ex {
+			return key
+		}
+	}
+	return "false"
+}
+
 func figlet(cmd *cobra.Command, author string, output string, description string, lang string, font string, times bool) {
 	name := strings.Split(output, ".")
 	if len(name) > 1 && lang == "" {
-		lang = name[1]
+		lang = extolan(name[1])
 	} else if len(name) > 1 && lang != "" {
 		cmd.Help()
 		os.Exit(2)
@@ -106,7 +115,7 @@ func figlet(cmd *cobra.Command, author string, output string, description string
 		cmd.Help()
 		os.Exit(1)
 	}
-
+	// Need to add a check for false language , and add to exists 1,2
 	asciio := figure.NewFigure(name[0], font, true)
 	asciia := figure.NewFigure("By ."+author, font, true)
 	fmt.Println(getShebang(lang))
