@@ -1,10 +1,9 @@
 /*
 Copyright © 2024 Dovshmi
-
 */
 package main
 
-import "table.go/Cobra/cmd"
+import "Loki/Loki/cmd"
 
 func main() {
 	cmd.Execute()
