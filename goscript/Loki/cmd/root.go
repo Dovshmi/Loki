@@ -113,9 +113,7 @@ func figlet(cmd *cobra.Command, author string, output string, description string
 	filgetwithcap(asciio.Slicify(), lang)
 	filgetwithcap(asciia.Slicify(), lang)
 	if times {
-		currentTime := time.Now().UTC()
-		layout := "02 Jan 2006"
-		formattedTime := currentTime.Format(layout)
+		formattedTime := time.Now().UTC().Format("02 Jan 2006")
 		asciit := figure.NewFigure(formattedTime, font, true)
 		filgetwithcap(asciit.Slicify(), lang)
 	}
