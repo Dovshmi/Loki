@@ -82,6 +82,42 @@ func extolan(ex string) string {
 	return "false"
 }
 
+func filewrite(output string, shabeng string, comment string, description string, asciis ...[]string) {
+	if _, err := os.Stat(output); os.IsNotExist(err) {
+		// Create the file
+		file, err := os.Create(output)
+		if err != nil {
+			fmt.Println("Error creating file:", err)
+			return
+		}
+		defer file.Close()
+		// content := fmt.Sprintf("%s\n%s\n%s\n%s\n", output, shabeng, comment, description)
+		_, err = file.WriteString(shabeng + "\n")
+		if err != nil {
+			fmt.Println("Error writing to file:", err)
+			return
+		}
+		for i, ascii := range asciis {
+			for _, line := range ascii {
+				fmt.Fprintf(file, "%s%s\n", comment, line)
+			}
+			if i == len(asciis)-1 {
+				file.WriteString(comment + "\n" + comment + " Description: " + description)
+			}
+		}
+
+		fmt.Println("Content written to the file successfully.")
+		err = os.Chmod(output, 0755)
+		if err != nil {
+			fmt.Println("Error making the file executable:", err)
+		} else {
+			fmt.Println("File is now executable.")
+		}
+	} else {
+		fmt.Println("File already exists. Not writing to it.")
+	}
+}
+
 func figlet(cmd *cobra.Command, author string, output string, description string, lang string, font string, times bool) {
 	name := strings.Split(output, ".")
 	if len(name) > 1 && lang == "" {
@@ -103,17 +139,6 @@ func figlet(cmd *cobra.Command, author string, output string, description string
 		os.Exit(3)
 	}
 	output = name[0] + "." + ex
-	if _, err := os.Stat(output); os.IsNotExist(err) {
-		// Create the file
-		file, err := os.Create(output)
-		if err != nil {
-			fmt.Println("Error creating file:", err)
-			return
-		}
-		defer file.Close()
-	} else {
-		fmt.Println("File already exists. Not writing to it.")
-	}
 	asciio := figure.NewFigure(name[0], font, true)
 	asciia := figure.NewFigure("By ."+author, font, true)
 	fmt.Println(shabeng)
@@ -123,6 +148,9 @@ func figlet(cmd *cobra.Command, author string, output string, description string
 		formattedTime := time.Now().UTC().Format("02 Jan 2006")
 		asciit := figure.NewFigure(formattedTime, font, true)
 		filgetwithcap(asciit.Slicify(), comment)
+		filewrite(output, shabeng, comment, description, asciio.Slicify(), asciia.Slicify(), asciit.Slicify())
+	} else {
+		filewrite(output, shabeng, comment, description, asciio.Slicify(), asciia.Slicify())
 	}
 	fmt.Println(comment)
 	fmt.Println(comment, "Description:", description)
