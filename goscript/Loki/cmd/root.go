@@ -66,24 +66,10 @@ func handleLanguage(lang string) (string, string, string) {
 	return "false", "", ""
 }
 
-func getcap(lang string) string {
-	if val, ok := languageMap[lang]; ok {
-		return val.comments
-	}
-	return "false"
-}
-
-func getShebang(lang string) string {
-	if val, ok := languageMap[lang]; ok {
-		return val.shebang
-	}
-	return "false"
-}
-
-func filgetwithcap(ascii []string, lang string) {
+func filgetwithcap(ascii []string, comment string) {
 	// lines := ascii.Slicify()
 	for _, line := range ascii {
-		fmt.Println(getcap(lang), line)
+		fmt.Println(comment, line)
 	}
 }
 
@@ -111,19 +97,24 @@ func figlet(cmd *cobra.Command, author string, output string, description string
 	if realan != "false" {
 		lang = realan
 	}
+	ex, shabeng, comment := handleLanguage(lang)
+	if ex == "false" {
+		cmd.Help()
+		os.Exit(3)
+	}
 	// Need to add a check for false language , and add to exists 1,2
 	asciio := figure.NewFigure(name[0], font, true)
 	asciia := figure.NewFigure("By ."+author, font, true)
-	fmt.Println(getShebang(lang))
-	filgetwithcap(asciio.Slicify(), lang)
-	filgetwithcap(asciia.Slicify(), lang)
+	fmt.Println(shabeng)
+	filgetwithcap(asciio.Slicify(), comment)
+	filgetwithcap(asciia.Slicify(), comment)
 	if times {
 		formattedTime := time.Now().UTC().Format("02 Jan 2006")
 		asciit := figure.NewFigure(formattedTime, font, true)
-		filgetwithcap(asciit.Slicify(), lang)
+		filgetwithcap(asciit.Slicify(), comment)
 	}
-	fmt.Println(getcap(lang))
-	fmt.Println(getcap(lang), "Description:", description)
+	fmt.Println(comment)
+	fmt.Println(comment, "Description:", description)
 }
 
 // rootCmd represents the base command when called without any subcommands
