@@ -102,7 +102,18 @@ func figlet(cmd *cobra.Command, author string, output string, description string
 		cmd.Help()
 		os.Exit(3)
 	}
-	// Need to add a check for false language , and add to exists 1,2
+	output = name[0] + "." + ex
+	if _, err := os.Stat(output); os.IsNotExist(err) {
+		// Create the file
+		file, err := os.Create(output)
+		if err != nil {
+			fmt.Println("Error creating file:", err)
+			return
+		}
+		defer file.Close()
+	} else {
+		fmt.Println("File already exists. Not writing to it.")
+	}
 	asciio := figure.NewFigure(name[0], font, true)
 	asciia := figure.NewFigure("By ."+author, font, true)
 	fmt.Println(shabeng)
