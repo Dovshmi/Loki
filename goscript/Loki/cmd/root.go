@@ -127,16 +127,20 @@ func printfig(shabeng string, comment string, description string, asciis ...[]st
 	}
 }
 
+func exithelp(massage string, cmd *cobra.Command) {
+	cmd.Help()
+	fmt.Println("\n\n", "Error: ", massage)
+	os.Exit(0)
+}
+
 func figlet(cmd *cobra.Command, author string, output string, description string, lang string, font string, times bool, prints bool) {
 	name := strings.Split(output, ".")
 	if len(name) > 1 && lang == "" {
 		lang = extolan(name[1])
 	} else if len(name) > 1 && lang != "" {
-		cmd.Help()
-		os.Exit(2)
+		exithelp("Cannot use both --language and --output", cmd)
 	} else if len(name) == 1 && lang == "" {
-		cmd.Help()
-		os.Exit(1)
+		exithelp("Missing language --language", cmd)
 	}
 	realan := extolan(lang)
 	if realan != "false" {
@@ -144,8 +148,7 @@ func figlet(cmd *cobra.Command, author string, output string, description string
 	}
 	ex, shabeng, comment := handleLanguage(lang)
 	if ex == "false" {
-		cmd.Help()
-		os.Exit(3)
+		exithelp("Language not supported", cmd)
 	}
 	output = name[0] + "." + ex
 	asciio := figure.NewFigure(name[0], font, true)
@@ -172,7 +175,8 @@ var rootCmd = &cobra.Command{
 	Use:   "loki",
 	Short: "Loki... A Custom Script Header Generator",
 	Args:  cobra.MatchAll(cobra.OnlyValidArgs),
-	Long: `Loki... A Custom Script Header Generator
+	Long: `
+Loki... A Custom Script Header Generator
 Designed to create custom script headers with Figlet ASCII art.
 Generating headers that include script name, author, description, date and Figlet ASCII art.
 `,
@@ -181,13 +185,13 @@ Generating headers that include script name, author, description, date and Figle
 	Run: func(cmd *cobra.Command, args []string) {
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Println("Error:", r)
 				cmd.Help()
+				fmt.Println("\n\nError:", r)
 				return
 			}
 		}()
 		figlet(cmd, a, o, d, l, f, t, p)
-		fmt.Println(a, o, d, l, f, t, p)
+		// fmt.Println(a, o, d, l, f, t, p)
 	},
 }
 
