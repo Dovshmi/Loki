@@ -29,20 +29,14 @@ var languageMap = map[string]struct {
 	comments  string // Single-line and multi-line comment symbols
 }{
 	"bash":       {"sh", "#!/bin/bash", "#"},
-	"sh":         {"sh", "#!/bin/bash", "#"},
 	"python":     {"py", "#!/usr/bin/env python", "#"},
-	"py":         {"py", "#!/usr/bin/env python", "#"},
 	"perl":       {"pl", "#!/usr/bin/perl", "#"},
-	"pl":         {"pl", "#!/usr/bin/perl", "#"},
 	"ruby":       {"rb", "#!/usr/bin/env ruby", "#"},
-	"rb":         {"rb", "#!/usr/bin/env ruby", "#"},
 	"php":        {"php", "#!/usr/bin/env php", "//"},
 	"javascript": {"js", "#!/usr/bin/env node", "//"},
-	"js":         {"js", "#!/usr/bin/env node", "//"},
 	"nim":        {"nim", "", "#"},
 	"nimlang":    {"nim", "", "#"},
 	"c":          {"c", "", "//"},
-	"cpp":        {"cpp", "", "//"},
 	"c++":        {"cpp", "", "//"},
 	"java":       {"java", "", "//"},
 	"golang":     {"go", "", "//"},
@@ -91,8 +85,6 @@ func filgetwithcap(ascii []string, lang string) {
 	for _, line := range ascii {
 		fmt.Println(getcap(lang), line)
 	}
-	// fmt.Println(ascii.String(), a, o, d, l, f, t)
-	// fmt.Println(handleLanguage(l))
 }
 
 func extolan(ex string) string {
@@ -114,6 +106,10 @@ func figlet(cmd *cobra.Command, author string, output string, description string
 	} else if len(name) == 1 && lang == "" {
 		cmd.Help()
 		os.Exit(1)
+	}
+	realan := extolan(lang)
+	if realan != "false" {
+		lang = realan
 	}
 	// Need to add a check for false language , and add to exists 1,2
 	asciio := figure.NewFigure(name[0], font, true)
@@ -152,14 +148,7 @@ to quickly create a Cobra application.`,
 			}
 		}()
 		figlet(cmd, a, o, d, l, f, t)
-		// ascii := figure.NewFigure(o, f, true)
-		//lines := ascii.Slicify()
-		//for _, line := range lines {
-		//	fmt.Println(getcap(l), line)
-		//}
-		//fmt.Println()
 		fmt.Println(a, o, d, l, f, t)
-		// fmt.Println(handleLanguage(l))
 	},
 }
 
