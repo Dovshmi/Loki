@@ -21,7 +21,10 @@ var (
 	f string
 )
 
-var t bool
+var (
+	t bool
+	p bool
+)
 
 var languageMap = map[string]struct {
 	extension string
@@ -64,13 +67,6 @@ func handleLanguage(lang string) (string, string, string) {
 		return val.extension, val.shebang, val.comments
 	}
 	return "false", "", ""
-}
-
-func filgetwithcap(ascii []string, comment string) {
-	// lines := ascii.Slicify()
-	for _, line := range ascii {
-		fmt.Println(comment, line)
-	}
 }
 
 func extolan(ex string) string {
@@ -118,7 +114,20 @@ func filewrite(output string, shabeng string, comment string, description string
 	}
 }
 
-func figlet(cmd *cobra.Command, author string, output string, description string, lang string, font string, times bool) {
+func printfig(shabeng string, comment string, description string, asciis ...[]string) {
+	fmt.Println(shabeng)
+	for i, ascii := range asciis {
+		for _, line := range ascii {
+			fmt.Println(comment, line)
+		}
+		if i == len(asciis)-1 {
+			fmt.Println(comment)
+			fmt.Println(comment, "Description: ", description)
+		}
+	}
+}
+
+func figlet(cmd *cobra.Command, author string, output string, description string, lang string, font string, times bool, prints bool) {
 	name := strings.Split(output, ".")
 	if len(name) > 1 && lang == "" {
 		lang = extolan(name[1])
@@ -141,32 +150,32 @@ func figlet(cmd *cobra.Command, author string, output string, description string
 	output = name[0] + "." + ex
 	asciio := figure.NewFigure(name[0], font, true)
 	asciia := figure.NewFigure("By ."+author, font, true)
-	fmt.Println(shabeng)
-	filgetwithcap(asciio.Slicify(), comment)
-	filgetwithcap(asciia.Slicify(), comment)
+	formattedTime := time.Now().UTC().Format("02 Jan 2006")
+	asciit := figure.NewFigure(formattedTime, font, true)
+
 	if times {
-		formattedTime := time.Now().UTC().Format("02 Jan 2006")
-		asciit := figure.NewFigure(formattedTime, font, true)
-		filgetwithcap(asciit.Slicify(), comment)
 		filewrite(output, shabeng, comment, description, asciio.Slicify(), asciia.Slicify(), asciit.Slicify())
 	} else {
 		filewrite(output, shabeng, comment, description, asciio.Slicify(), asciia.Slicify())
 	}
-	fmt.Println(comment)
-	fmt.Println(comment, "Description:", description)
+	if prints {
+		if times {
+			printfig(shabeng, comment, description, asciio.Slicify(), asciia.Slicify(), asciit.Slicify())
+		} else {
+			printfig(shabeng, comment, description, asciio.Slicify(), asciia.Slicify())
+		}
+	}
 }
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "loki",
-	Short: "A brief description of your application",
+	Short: "Loki... A Custom Script Header Generator",
 	Args:  cobra.MatchAll(cobra.OnlyValidArgs),
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long: `Loki... A Custom Script Header Generator
+Designed to create custom script headers with Figlet ASCII art.
+Generating headers that include script name, author, description, date and Figlet ASCII art.
+`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
@@ -177,8 +186,8 @@ to quickly create a Cobra application.`,
 				return
 			}
 		}()
-		figlet(cmd, a, o, d, l, f, t)
-		fmt.Println(a, o, d, l, f, t)
+		figlet(cmd, a, o, d, l, f, t, p)
+		fmt.Println(a, o, d, l, f, t, p)
 	},
 }
 
@@ -200,12 +209,35 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolVarP(&t, "time", "t", false, "Add the current date to the header.")
 	rootCmd.Flags().StringVarP(&a, "author", "a", "", "Specify the author name.")
 	rootCmd.Flags().StringVarP(&o, "output", "o", "", "Specify the output file name.")
 	rootCmd.Flags().StringVarP(&d, "description", "d", "", "Specify the header description.")
 	rootCmd.Flags().StringVarP(&l, "language", "l", "", "Specify the script language.")
 	rootCmd.Flags().StringVarP(&f, "font", "f", "", "Specify the Figlet font.")
+	rootCmd.Flags().BoolVarP(&t, "time", "t", false, "Add the current date to the header.")
+	rootCmd.Flags().BoolVarP(&p, "print", "p", false, "Print the header.")
 	rootCmd.MarkFlagRequired("author")
 	rootCmd.MarkFlagRequired("output")
+	// make the help menu not ordered
+	rootCmd.Flags().SortFlags = false
+
+	// change the usage shown in the help command
+	rootCmd.SetUsageTemplate(`Usage:
+    {{.UseLine}}
+
+Flags:
+{{.LocalFlags.FlagUsages | trimRightSpace}}{{if .HasAvailableInheritedFlags}}
+
+Global Flags:
+{{.InheritedFlags.FlagUsages | trimRightSpace}}{{end}}
+
+Examples:
+  loki -a "John Doe" -d "A sample script" -o script.sh
+      Generates a script header with author name "John Doe", description "A sample script", and saves it to "script.sh".
+
+  loki -a "Jane Smith" -d "Python script" -o script.py -l python -f standard -t
+      Generates a script header with author name "Jane Smith", description "Python script", current date, and saves it to "script.py".
+
+  loki -a "Anonymous" -d "Bash script" -o script.bash -l bash -f mini -p
+      Generates a script header with author name "Anonymous", description "Bash script", using mini font, and prints it to console.`)
 }
