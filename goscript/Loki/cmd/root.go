@@ -111,6 +111,7 @@ func filewrite(output string, shabeng string, comment string, description string
 		}
 	} else {
 		fmt.Println("File already exists. Not writing to it.")
+		os.Exit(0)
 	}
 }
 
@@ -128,8 +129,8 @@ func printfig(shabeng string, comment string, description string, asciis ...[]st
 }
 
 func exithelp(massage string, cmd *cobra.Command) {
+	fmt.Println("\n", "Error: ", massage)
 	cmd.Help()
-	fmt.Println("\n\n", "Error: ", massage)
 	os.Exit(0)
 }
 
@@ -177,16 +178,14 @@ var rootCmd = &cobra.Command{
 	Args:  cobra.MatchAll(cobra.OnlyValidArgs),
 	Long: `
 Loki... A Custom Script Header Generator
-Designed to create custom script headers with Figlet ASCII art.
-Generating headers that include script name, author, description, date and Figlet ASCII art.
 `,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		defer func() {
 			if r := recover(); r != nil {
+				fmt.Println("\nError:", r)
 				cmd.Help()
-				fmt.Println("\n\nError:", r)
 				return
 			}
 		}()
@@ -200,7 +199,7 @@ Generating headers that include script name, author, description, date and Figle
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-		os.Exit(1)
+		os.Exit(0)
 	}
 }
 
@@ -234,14 +233,5 @@ Flags:
 
 Global Flags:
 {{.InheritedFlags.FlagUsages | trimRightSpace}}{{end}}
-
-Examples:
-  loki -a "John Doe" -d "A sample script" -o script.sh
-      Generates a script header with author name "John Doe", description "A sample script", and saves it to "script.sh".
-
-  loki -a "Jane Smith" -d "Python script" -o script.py -l python -f standard -t
-      Generates a script header with author name "Jane Smith", description "Python script", current date, and saves it to "script.py".
-
-  loki -a "Anonymous" -d "Bash script" -o script.bash -l bash -f mini -p
-      Generates a script header with author name "Anonymous", description "Bash script", using mini font, and prints it to console.`)
+`)
 }
