@@ -1,0 +1,30 @@
+name: Go CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+
+      - name: Build packages
+        run: |
+          if [ -f go.mod ]; then
+            go test ./...
+          else
+            mapfile -t files < <(find . -name '*.go' -not -path './.git/*')
+            if [ ${#files[@]} -eq 0 ]; then
+              echo "No Go files found"
+            else
+              go test "${files[@]}"
+            fi
+          fi
