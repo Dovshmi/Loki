@@ -16,15 +16,19 @@ jobs:
         with:
           go-version: 'stable'
 
-      - name: Build packages
+      - name: Build Go files
         run: |
           if [ -f go.mod ]; then
             go test ./...
           else
-            mapfile -t files < <(find . -name '*.go' -not -path './.git/*')
-            if [ ${#files[@]} -eq 0 ]; then
+            mapfile -t dirs < <(find . -name '*.go' -not -path './.git/*' -printf '%h
+' | sort -u)
+            if [ ${#dirs[@]} -eq 0 ]; then
               echo "No Go files found"
             else
-              go test "${files[@]}"
+              for d in "${dirs[@]}"; do
+                echo "Testing Go files in $d"
+                (cd "$d" && go test .)
+              done
             fi
           fi
