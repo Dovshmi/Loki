@@ -1,0 +1,22 @@
+name: Shell CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  shell:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Bash syntax check
+        run: |
+          shopt -s globstar nullglob
+          files=(**/*.sh)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No .sh files found"
+          else
+            for f in "${files[@]}"; do bash -n "$f"; done
+          fi
