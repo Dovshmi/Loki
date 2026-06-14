@@ -28,7 +28,7 @@ jobs:
             else
               for d in "${dirs[@]}"; do
                 echo "Testing Go files in $d"
-                (cd "$d" && go test .)
+                (cd "$d" && GO111MODULE=off go test .)
               done
             fi
           fi
