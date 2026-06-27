@@ -1,88 +1,302 @@
-# Loki The Custom Script Header Generator
+# 🐍 Loki — Custom Script Header Generator
 
-This Bash script is designed to create custom script headers with Figlet ASCII art. It allows users to add a personalized touch to their scripts by generating headers that include script name, author name, description, and Figlet ASCII art. 
+<div align="center">
+  <img src="https://img.shields.io/badge/Bash-Script-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white" alt="Bash" />
+  <img src="https://img.shields.io/badge/Figlet-ASCII_Art-7C3AED?style=for-the-badge" alt="Figlet" />
+  <img src="https://img.shields.io/badge/Mode-CLI_%2B_TUI-0F766E?style=for-the-badge" alt="CLI and TUI" />
+  <img src="https://img.shields.io/badge/Output-Multi_Language-2563EB?style=for-the-badge" alt="Multi-language output" />
+  <img src="https://img.shields.io/badge/License-Not_Specified-6B7280?style=for-the-badge" alt="License Not Specified" />
+</div>
 
-## Prerequisites
+<div align="center">
+  <p><strong>A Bash utility that generates clean starter script headers with Figlet ASCII art, author details, descriptions, optional dates, and language-aware shebangs.</strong></p>
+</div>
 
-Before using this script, ensure that Figlet is installed on your system.
-Depending on your package manager, you can install Figlet using the following commands:
+---
+
+## Overview
+
+**Loki** is a small command-line and text-interface tool for creating polished script headers quickly. It asks for, or accepts through flags, the script name, author name, description, language, Figlet font, and optional timestamp. Loki then creates a starter file with a matching extension, language-aware shebang where relevant, Figlet banner, description line, and executable permission.
+
+It is useful when you create many scripts and want each file to start with a consistent, recognizable, and more personal header.
+
+---
+
+## Demo
+
+### TUI Mode
+
+Use the interactive terminal flow when you want Loki to ask for each value step by step.
+
 ```bash
+./bashscript/loki.sh --tui
+```
+
+<div align="center">
+  <img src="https://github.com/Dovshmi/Loki/assets/70490582/df76da56-6a0b-4a15-aa9d-616882fd23d2" alt="Loki TUI mode demo" width="760" />
+</div>
+
+### CLI Help and Options
+
+Loki can also run fully from command-line arguments.
+
+<div align="center">
+  <img src="https://github.com/Dovshmi/Loki/assets/70490582/5abd2d54-0800-4518-b9c5-25cb5c5ae60b" alt="Loki command-line options" width="760" />
+</div>
+
+### Generated Header Examples
+
+<div align="center">
+  <img src="https://github.com/Dovshmi/Loki/assets/70490582/32a511cc-b466-461e-abe8-b705d998b5e3" alt="Generated Bash header example" width="760" />
+</div>
+
+<div align="center">
+  <img src="https://github.com/Dovshmi/Loki/assets/70490582/d49359dc-cda7-4f82-be9e-994d4aeeea0d" alt="Generated Python header example" width="760" />
+</div>
+
+---
+
+## Features
+
+- **Interactive TUI mode** for guided header creation.
+- **Command-line mode** for fast repeatable generation.
+- **Figlet ASCII art** for script name and author branding.
+- **Language-aware output** with extension and shebang handling.
+- **Optional custom Figlet font** with a default fallback.
+- **Optional date/time banner** in the generated header.
+- **Automatic executable permission** for the generated file.
+- **Extension inference** when the output file name already includes a supported extension.
+
+---
+
+## Supported Languages
+
+Loki currently maps these language names/extensions:
+
+| Language input | Output extension | Shebang / behavior |
+| :--- | :--- | :--- |
+| `bash`, `sh` | `.sh` | `#!/bin/bash` |
+| `python`, `py` | `.py` | `#!/usr/bin/env python` |
+| `perl`, `pl` | `.pl` | `#!/usr/bin/perl` |
+| `ruby`, `rb` | `.rb` | `#!/usr/bin/env ruby` |
+| `php` | `.php` | `#!/usr/bin/env php` |
+| `javascript`, `js` | `.js` | `#!/usr/bin/env node` |
+| `c` | `.c` | no shebang |
+| `cpp`, `c++` | `.cpp` | no runtime shebang |
+| `java` | `.java` | no runtime shebang |
+| `golang`, `go` | `.go` | no runtime shebang |
+
+---
+
+## Requirements
+
+Required:
+
+- Bash
+- Figlet
+- Standard Unix tools such as `getopt`, `sed`, `awk`, `date`, and `chmod`
+
+Install Figlet with your package manager:
+
+```bash
+# Debian / Ubuntu
 sudo apt-get install figlet
-```
-```bash
+
+# Fedora
 sudo dnf install figlet
-```
-```bash
+
+# Arch Linux
 sudo pacman -S figlet
 ```
+
+---
+
+## Project Structure
+
+```text
+Loki/
+├── bashscript/
+│   └── loki.sh        # Main Loki script
+└── README.md          # Project documentation
+```
+
+---
+
+## Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Dovshmi/Loki.git
+cd Loki
+```
+
+### 2. Make the script executable
+
+```bash
+chmod +x bashscript/loki.sh
+```
+
+### 3. Show help
+
+```bash
+./bashscript/loki.sh --help
+```
+
+---
 
 ## Usage
 
 ### Interactive Mode
-By Using Interactive Mode, You can provide the necessary details for generating the script header.
-Like old scripts, you can use the interactive mode to add details to the script header.
 
 ```bash
-./loki.sh -T
+./bashscript/loki.sh -T
 ```
-Or you could use the -- TUI mode:
+
+or:
+
 ```bash
-./loki.sh --tui
+./bashscript/loki.sh --tui
 ```
-![2024-02-20_11-08-15](https://github.com/Dovshmi/Loki/assets/70490582/df76da56-6a0b-4a15-aa9d-616882fd23d2)
 
-### Command-line Arguments
-You can also use command-line arguments to provide the necessary details for generating the script header. Available options are:
+### Command-Line Mode
 
-- `-a, --author`: Specify the author name.
-- `-o, --output`: Specify the output file name.
-- `-d, --description`: Provide a description for the script.
-- `-l, --language`: Specify the script language (e.g., bash, python).
-- `-f, --font`: Optionally specify the Figlet font to use.
-- `-t, --time`: Optionally specify the time of day to use in the header.
-- `-T, --tui`: Enable textual user interface mode.
-- `-h, --help`: Display help information.
+Create a Bash script header:
 
-![2024-02-20_11-04-54](https://github.com/Dovshmi/Loki/assets/70490582/5abd2d54-0800-4518-b9c5-25cb5c5ae60b)
-
-### Examples
-
-#### Example 1: Creating a Bash Script Header Using .sh Extension 
 ```bash
-./loki.sh -a "Jane Smith" -o "my_script.sh" -d "A utility script for file manipulation"
+./bashscript/loki.sh \
+  -a "Rony Shmidov" \
+  -o "backup" \
+  -d "Backup local project files" \
+  -l bash
 ```
-![2024-02-20_11-06-22](https://github.com/Dovshmi/Loki/assets/70490582/32a511cc-b466-461e-abe8-b705d998b5e3)
 
-#### Example 2: Generating a Python Script Header Using -l Flag 
-```bash
-./loki.sh -a "John Doe" -o "my_script" -d "A script to analyze data" -l python
-```
-![2024-02-20_11-07-16](https://github.com/Dovshmi/Loki/assets/70490582/d49359dc-cda7-4f82-be9e-994d4aeeea0d)
+Create a Python script by inferring the language from the output extension:
 
-#### Example 3: Generating a Go Script Header Using -f Flag For figlet Font With -t Flag For Date
 ```bash
-./loki.sh -a "John Doe" -o "my_script.go" -d "simple script" -f "mini" -t
+./bashscript/loki.sh \
+  -a "Rony Shmidov" \
+  -o "analyze.py" \
+  -d "Analyze project data"
 ```
+
+Create a Go starter file with a custom Figlet font and date banner:
+
+```bash
+./bashscript/loki.sh \
+  -a "Rony Shmidov" \
+  -o "tool.go" \
+  -d "Small Go utility" \
+  -f mini \
+  -t
+```
+
+---
+
+## Options
+
+| Option | Description |
+| :--- | :--- |
+| `-a`, `--author` | Author name or alias to place in the header. |
+| `-o`, `--output` | Output file name. Can include a supported extension. |
+| `-d`, `--description` | Description line for the generated script. |
+| `-l`, `--language` | Script language when the output extension is not provided. |
+| `-f`, `--font` | Figlet font to use. Defaults to `small`. |
+| `-t`, `--time` | Add the current date/time banner to the header. |
+| `-T`, `--tui` | Start the interactive text user interface. |
+| `-h`, `--help` | Show help output. |
+
+---
+
+## Optional Global Shortcut
+
+To run Loki from anywhere, create a symbolic link:
+
+```bash
+sudo ln -s "$(pwd)/bashscript/loki.sh" /usr/local/bin/loki
+```
+
+Then use:
+
+```bash
+loki --help
+loki --tui
+```
+
+---
+
+## Output Behavior
+
+When Loki runs successfully, it creates a new script file in the current directory and makes it executable.
+
+Example:
+
+```bash
+./bashscript/loki.sh -a "Rony Shmidov" -o "hello.sh" -d "Simple hello script"
+```
+
+Expected output file:
+
+```text
+hello.sh
+```
+
+The generated file includes:
+
+- the relevant shebang, where applicable;
+- Figlet art for the script name;
+- Figlet art for the author line;
+- an optional date/time banner;
+- a `Description:` line;
+- executable permissions.
+
+---
 
 ## Use Cases
 
-- **Personal Scripts**: Customize your personal scripts with unique headers, making them more enjoyable to use and share.
-- **Project Scripts**: Enhance the appearance of scripts used in your projects, adding branding and professionalism.
-- **Educational Materials**: Create visually appealing script headers for tutorials, guides, or educational materials.
-- **Script Libraries**: Incorporate custom headers into script libraries to provide a consistent look and feel.
+- Personal script templates.
+- Project automation files.
+- Educational examples and tutorials.
+- Script libraries that need a consistent header style.
+- Quick branded starter files for Bash, Python, Go, JavaScript, and other small tools.
 
-## Shurtcut
+---
 
-If you would like to create a small little shurtcut, you could make symbolic links. 
-```bash
-sudo ln -s "/FULL/PATH/TO/Loki/bashscript/loki.sh" "/usr/bin/loki"
-```
+## Known Limitations
+
+- Existing output files may be overwritten because there is no overwrite confirmation flow yet.
+- Figlet must be installed before running Loki.
+- Long option parsing depends on `getopt`, so behavior may vary slightly between Linux and macOS environments.
+- There is no formal installer script yet.
+- No formal `LICENSE` file is currently included in the repository.
+
+---
+
+## Roadmap Ideas
+
+- Add overwrite confirmation before replacing an existing file.
+- Add validation for unavailable Figlet fonts.
+- Add a safer install script for the global `loki` command.
+- Add examples for every supported language.
+- Add ShellCheck and automated smoke tests.
+- Add a formal open-source license file.
+
+---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-Made By Dovshmi
+No formal `LICENSE` file is currently included in this repository. Add a license file before encouraging reuse, modification, or redistribution by others.
+
+---
+
 ## Acknowledgements
 
-- This script was inspired by the need for easily creating custom script headers.
-- Figlet ASCII art adds a creative touch to scripts, enhancing their appearance and personalization.
+- Built around Figlet ASCII art for fast visual script branding.
+- Created to make starter scripts feel more personal and easier to identify.
+
+---
+
+<div align="center">
+  Built by <strong>Dovshmi</strong><br />
+  GitHub: <a href="https://github.com/Dovshmi">@Dovshmi</a>
+</div>
